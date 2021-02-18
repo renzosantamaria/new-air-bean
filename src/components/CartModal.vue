@@ -14,7 +14,13 @@
                 <p>{{item.price * item.amount}} kr</p>
               </div>
               <div class="amount">
-                {{item.amount}}st
+                <span @click="increaseAmount(item)" class="plus">
+                  <img src="@/assets/arrow-up.svg" alt="">
+                </span>
+                <p>{{item.amount}}</p>
+                <span @click="decreaseAmount(item)" class="minus">
+                  <img src="@/assets/arrow-down.svg" alt="">
+                </span>
               </div>
               
             </div>
@@ -37,13 +43,25 @@ export default {
     }
 
   },
-    methods:{
+  methods:{
     sendStatus(){
     this.$store.dispatch('toggleCart')
 
       this.$router.replace('/order-status')
+    },
+    increaseAmount(item){
+      this.$store.dispatch('increaseAmount', item)
+    },
+    decreaseAmount(item){
+      console.log(item.amount)
+      if(item.amount > 0){
+        this.$store.dispatch('decreaseAmount', item)
+      }
+      if(item.amount == 0){
+        this.$store.dispatch('removeProduct', item)
+      }
     }
-    }
+  }
 }
 </script>
 
@@ -72,6 +90,14 @@ export default {
               width: 200px;
               display: flex;
               justify-content: space-between;
+              align-items: center;
+              .amount{
+                display: flex;
+                flex-direction: column;
+                .plus, .minus{
+                  //border: 1px solid black;
+                }
+              }
             }
             .triangle{
                 height: 20px;

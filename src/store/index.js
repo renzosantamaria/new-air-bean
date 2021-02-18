@@ -65,6 +65,18 @@ export default new Vuex.Store({
     [Mutations.TOGGLE_CART](state){
       state.cartIsActive = !state.cartIsActive
     },
+    [Mutations.INCREASE_PRODUCT_AMOUNT](state, payload){
+      const foundProduct = state.currentOrder.find(product => product.id == payload.id)
+      foundProduct.amount++
+    },
+    [Mutations.DECREASE_PRODUCT_AMOUNT](state, payload){
+      const foundProduct = state.currentOrder.find(product => product.id == payload.id)
+      foundProduct.amount--
+    },
+    [Mutations.REMOVE_PRODUCT](state, payload){
+      const foundProduct = state.currentOrder.find(product => product.id == payload.id)
+      state.currentOrder.splice(state.currentOrder.indexOf(foundProduct), 1);
+    }
   },
   actions: {
     async fetchProducts({ commit }) {
@@ -93,6 +105,15 @@ export default new Vuex.Store({
     addToCart({ commit }, payload) {
       console.log(payload)
       commit(Mutations.ADD_TO_CART, payload)
+    },
+    increaseAmount({ commit }, payload) {
+      commit(Mutations.INCREASE_PRODUCT_AMOUNT, payload)
+    },
+    decreaseAmount({ commit }, payload) {
+      commit(Mutations.DECREASE_PRODUCT_AMOUNT, payload)
+    },
+    removeProduct({ commit }, payload) {
+      commit(Mutations.REMOVE_PRODUCT, payload)
     },
     async makeOrder({ commit, state }) {
       let userId = state.user.id
