@@ -91,7 +91,10 @@ export default {
     },
     currentOrderLength(){
       if (this.getCurrentOrder) {
-        return this.getCurrentOrder.length
+       let totalItems = 0
+       this.getCurrentOrder.map(item => totalItems += item.amount)
+      
+       return totalItems
       }else{
         return '0'
       }

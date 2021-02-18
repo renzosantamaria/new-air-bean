@@ -26,7 +26,7 @@
             </div>
           </li>
         </ul>
-        <h1>Total xx kr</h1>
+        <h1>Total {{totalPrice}} kr</h1>
         <base-button @click.native="sendStatus" class="black-btn">Take my money</base-button>
       </div>
 
@@ -40,6 +40,12 @@ export default {
   computed:{
     currentOrder(){
       return this.$store.getters.getCurrentOrder
+    },
+
+    totalPrice(){
+      let totalAmount = 0
+      this.currentOrder.map(item => totalAmount += item.amount * item.price)
+      return totalAmount
     }
 
   },
@@ -53,7 +59,7 @@ export default {
       this.$store.dispatch('increaseAmount', item)
     },
     decreaseAmount(item){
-      console.log(item.amount)
+ 
       if(item.amount > 0){
         this.$store.dispatch('decreaseAmount', item)
       }

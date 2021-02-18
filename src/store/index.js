@@ -49,7 +49,7 @@ export default new Vuex.Store({
         foundProduct.amount++
       }
         
-      console.log(state.currentOrder)
+     
     },
     [Mutations.SET_ORDER_DETAILS](state, payload) {
       state.orderDetails = payload
@@ -103,7 +103,7 @@ export default new Vuex.Store({
 
     },
     addToCart({ commit }, payload) {
-      console.log(payload)
+      
       commit(Mutations.ADD_TO_CART, payload)
     },
     increaseAmount({ commit }, payload) {
