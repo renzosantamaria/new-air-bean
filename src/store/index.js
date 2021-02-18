@@ -42,7 +42,7 @@ export default new Vuex.Store({
           title: payload.title,
           desc: payload.desc,
           price: payload.price,
-          amount: 1
+          amount: 1 
         })
       }else{
         const foundProduct = state.currentOrder.find(product => product.id == payload.id)
