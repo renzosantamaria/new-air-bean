@@ -1,11 +1,19 @@
 <template>
   <section>
-    <p>Ordernummer <strong>#12DV23F</strong></p>
-    <img src="../assets/drone.svg" alt="">
-    <h1>Din beställning är på väg</h1>
-    <p><strong>13</strong> minuter</p>
-    <base-button @click.native="sendHome">Ok, cool!</base-button>
-    <!-- <button ></button> -->
+    <div v-if="orderPlaced" class="status-info-wrapper">
+      <p >Ordernummer <span class="orderNumber"><strong>#{{orderDetails.orderId}}</strong></span> </p>
+      <img src="../assets/drone.svg" alt="">
+      <h1>Din beställning är på väg</h1>
+      <p><strong>{{countDown.min}}:{{countDown.sec}}</strong> minuter</p>
+      <base-button @click.native="sendHome">Ok, cool!</base-button>
+    </div>
+
+    <div v-else>
+      <img src="@/assets/loader.png" alt="">
+      <h1>You don't have any pending deliveries..</h1>
+      <base-button @click.native="sendHome">Ok, cool!</base-button>
+    </div>
+    <!-- <button @click="countDown">Check timer</button> -->
   </section>
 
 </template>
@@ -17,7 +25,36 @@ export default {
   methods:{
     sendHome(){
       this.$router.replace('/menu')
+    },
+  },
+  data(){
+    return{
+      estimatedTime: this.$store.getters.getOrderDetails
     }
+  },
+  computed:{
+    orderDetails(){
+      if (this.$store.getters.getOrderDetails) {
+        return this.$store.getters.getOrderDetails
+      }else{
+        return []
+      }
+    },
+    orderPlaced(){
+      if (this.$store.getters.getOrderDetails) {
+        return true
+      }else{
+        return false
+      }
+    },
+    countDown(){
+      if (this.$store.getters.getCountDown) {
+        return this.$store.getters.getCountDown
+      }else{
+        return ""
+      }
+    }
+        
   }
 }
 </script>
@@ -30,7 +67,9 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    
+    .orderNumber{
+      text-transform: uppercase;
+    }
     h1{
       width: fit-content;
     }

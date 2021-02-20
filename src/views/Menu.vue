@@ -15,9 +15,9 @@
 
         <p>{{product.price}}</p>
         
-        
       </li>
     </ul>
+        
   </div>
 </template>
 
@@ -49,15 +49,7 @@ export default {
         display: flex;
         justify-content: space-evenly;
         margin-bottom: 1.8rem;
-        .wrapper{
-          h3{
-            // width: 10px;
-          }
-          .dots{
-            // border: black 1px solid;
-            
-          }
-        }
+
         .add-icon-wrapper{
           height: 30px;
           width: 30px;
@@ -66,9 +58,20 @@ export default {
           align-items: center;
           background-color: black;
           border-radius: 50%;
-          
-          img.add-icon{
+          &:hover{
+            cursor: pointer;
+            // transform: scale(1.4);
+            animation: roll ease-in-out 0.6s;
+          }
+          @keyframes roll{
+            0%{transform: rotate(0deg), scale(1.4);}
+            50%{transform: rotate(200deg);}
+            100%{transform: rotate(0deg), scale(1.4);}
+
+          }
+          .add-icon{
             width: 18px;
+           
           }
         }
       }

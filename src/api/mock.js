@@ -17,25 +17,34 @@ export async function fetchProducts() {
 
 }
 
-export async function registerUser(name, email) {
+export async function registerUser(payload) {
   // Resolve a random generated ID after a random timer
   // Persist user in localStorage
-  const id = uid()
-  const user = { name, email, id, orderHistory: [] }
-  let users = JSON.parse(localStorage.getItem('users'))
-  if (users) {
-    users.push(user)
-    localStorage.setItem('users', JSON.stringify(users))
-  } else {
-    let users = []
-    users.push(user)
-    localStorage.setItem('users', JSON.stringify(users))
-  }
+  const idUser = uid()
+  const users =[
+    {
+    id: idUser,
+    name: payload.name,
+    email: payload.epost,
+    orderHistory: []
+    }
+  ]
+  localStorage.setItem('users', JSON.stringify(users))
+
+  // let users = JSON.parse(localStorage.getItem('users'))
+  // if (users) {
+  //   users.push(user)
+  //   localStorage.setItem('users', JSON.stringify(users))
+  // } else {
+  //   let users = []
+  //   users.push(user)
+  //   localStorage.setItem('users', JSON.stringify(users))
+  // }
 
   return new Promise((resolve) => {
     setTimeout(() => {
 
-      resolve(user);
+      resolve(users);
     }, (Math.random() + 0.1) * 1000);
   })
 }
@@ -43,7 +52,7 @@ export async function registerUser(name, email) {
 export function userExists() {
   let users = JSON.parse(localStorage.getItem('users'))
   if (users) {
-    return users[0]
+    return users
   }else{
     return null
   }
@@ -52,13 +61,13 @@ export function userExists() {
 export async function makeOrder(userId, currentOrder) {
   // Resolve with a orderId, order total price and ETA after a random timer
   // Persist order coupled userId in an array in localStorage
-
+  
   const orderId = uid()
   let totalPrice = 0;
   let estimatedTime = Math.floor((Math.random() + 1) * 10)
-  let orderArray = [...Object.values(currentOrder)];
+  // let orderArray = [...Object.values(currentOrder)];
 
-  for (let product of orderArray) {
+  for (let product of currentOrder) {
     totalPrice += +product.price * product.amount
   }
 
@@ -77,7 +86,6 @@ export async function makeOrder(userId, currentOrder) {
         currentUser = user
       }
     }
-
     const order = {
       orderId,
       totalPrice,
@@ -85,10 +93,14 @@ export async function makeOrder(userId, currentOrder) {
       date: `${new Date().getYear() - 100}/${new Date().getMonth() + 1}/${new Date().getDate()}`
     }
 
+    // currentUser.orderHistory = order
     currentUser.orderHistory.push(order)
     localStorage.setItem('users', JSON.stringify(users))
   }
-
+  if (!userId) {
+    localStorage.setItem(`${orderId}`, JSON.stringify(response))
+  }
+    
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(response)

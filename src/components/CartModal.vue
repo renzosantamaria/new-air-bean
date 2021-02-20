@@ -1,5 +1,6 @@
 <template>
   <section>
+    
       <div class="content-wrapper">
           <span class="triangle"></span>
         <h1>Din beställning</h1>
@@ -26,8 +27,15 @@
             </div>
           </li>
         </ul>
-        <h1>Total {{totalPrice}} kr</h1>
-        <base-button @click.native="sendStatus" class="black-btn">Take my money</base-button>
+
+        <div v-if="!currentOrderEmpty" class="total-price-wrapper">
+          <h1>Total {{totalPrice}} kr</h1>
+          <p>ink moms + drönarleverans</p>
+        </div>
+        <p v-else>Du har inga produkter i din varukorg!</p>
+
+        <base-button v-if="!currentOrderEmpty" @click.native="takeMyMoney" class="black-btn">Take my money</base-button>
+        
       </div>
 
   </section>
@@ -46,14 +54,31 @@ export default {
       let totalAmount = 0
       this.currentOrder.map(item => totalAmount += item.amount * item.price)
       return totalAmount
+    },
+    currentOrderEmpty(){
+      if (this.currentOrder.length >= 1) {
+        return false
+      }else{
+        return true
+      }
     }
 
   },
   methods:{
-    sendStatus(){
-    this.$store.dispatch('toggleCart')
+    takeMyMoney(){
+      if (this.$store.getters.getIsloggedIn) {
+        this.$store.dispatch('makeOrder')
+        this.$store.dispatch('toggleCart')
+        this.$store.dispatch('clearCurrentOrder')
 
-      this.$router.replace('/order-status')
+        this.$router.replace('/order-status')
+        
+      }else{
+        this.$store.dispatch('toggleConfirmationBox')
+      }
+
+      // this.$store.dispatch('toggleCart')
+
     },
     increaseAmount(item){
       this.$store.dispatch('increaseAmount', item)
@@ -92,6 +117,7 @@ export default {
             flex-direction: column;
             align-items: center;
             padding: 1.2rem;
+            border-radius: 4px;
             .item-wrapper{
               width: 200px;
               display: flex;
@@ -100,8 +126,11 @@ export default {
               .amount{
                 display: flex;
                 flex-direction: column;
-                .plus, .minus{
-                  //border: 1px solid black;
+                // .plus, .minus{
+                //   //border: 1px solid black;
+                // }
+                .plus:hover, .minus:hover{
+                  cursor: pointer;
                 }
               }
             }
@@ -116,6 +145,7 @@ export default {
                 transform: rotate(45deg);
             }
             ul{
+              height: 60vh;
               li{
                 list-style: none;
                 padding: 0.8rem;
@@ -125,6 +155,7 @@ export default {
         .black-btn{
             background-color: black;
             color: white;
+            margin-top: 2rem;
         }
     }
 </style>

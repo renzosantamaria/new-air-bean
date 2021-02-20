@@ -22,9 +22,10 @@
 
     <navigation-menu v-if="getNavBarIsActive" />
     <cart-modal v-if="getCartIsActive" />
+    <confirmation-box v-if="getConfirmationBoxActive" />
     <router-view></router-view>
 
-    <footer>
+    <footer v-if="!pathIsProfile">
       <img class="footer-flower" src="./assets/graphics-footer.svg" alt="">
     </footer>
   </div>
@@ -34,6 +35,7 @@
 import {mapGetters} from 'vuex'
 import {mapActions} from 'vuex'
 import CartModal from '@/components/CartModal.vue'
+import ConfirmationBox from '@/components/ConfirmationBox.vue'
 import NavigationMenu from '@/components/NavigationMenu.vue'
 import TheHeader from '@/components/TheHeader.vue'
 
@@ -41,7 +43,8 @@ export default {
     components:{
     NavigationMenu,
     TheHeader,
-    CartModal
+    CartModal,
+    ConfirmationBox
   },
    computed:{
      currentBackground(){
@@ -83,7 +86,10 @@ export default {
       }
     },
     showBagIcon(){
-      if (!this.pathIsOurCoffee && !this.getNavBarIsActive) {
+      if (this.pathIsProfile) {
+        return false
+      }
+      if (!this.pathIsOurCoffee && !this.getNavBarIsActive ) {
         return true
       } else {
         return false
@@ -100,9 +106,16 @@ export default {
       }
         
     },
+    pathIsProfile(){
+      if (this.$route.path == '/my-profile') {
+        return true
+      }else{
+        return false
+      }
+    },
         
         
-    ...mapGetters(['getNavBarIsActive', 'getCartIsActive', 'getCurrentOrder'])
+    ...mapGetters(['getNavBarIsActive', 'getCartIsActive', 'getConfirmationBoxActive', 'getCurrentOrder'])
   },
 
   async created() {
@@ -134,7 +147,7 @@ $orange: #E5674E;
   }
   .app-wrapper{
     position: relative;
-    height: 100vh;
+    min-height: 100vh;
     background-color: $pink;
     header{
       .header-flower{
